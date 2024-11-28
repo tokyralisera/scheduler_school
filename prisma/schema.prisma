@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model EmploiDeTemps {
+  id            Int      @id @default(autoincrement())
+  jour          String
+  semaine       Int
+  heure_debut   DateTime
+  heure_fin     DateTime
+  matiere_id    Int
+  professeur_id Int
+  salle_id      Int
+  classe_id     Int
+
+  // Relations
+  matiere    Matiere    @relation(fields: [matiere_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  professeur Professeur @relation(fields: [professeur_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  salle      Salle      @relation(fields: [salle_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  classe     Classe     @relation(fields: [classe_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Classe {
+  id       Int    @id @default(autoincrement())
+  niveau   String
+  parcours String
+
+  // Relations
+  emploiDeTemps EmploiDeTemps[]
+}
+
+model Salle {
+  id       Int    @id @default(autoincrement())
+  nomSalle String
+  capacite Int
+
+  // Relations
+  emploiDeTemps EmploiDeTemps[]
+}
+
+model Professeur {
+  id                  Int     @id @default(autoincrement())
+  nomProfesseur       String
+  prenomProfesseur    String
+  emailProfesseur     String
+  telephoneProfesseur String
+  disponibilite       Boolean
+  matiere_id          Int
+
+  // Relations
+  emploiDeTemps EmploiDeTemps[]
+  matiere       Matiere         @relation(fields: [matiere_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Matiere {
+  id                 Int               @id @default(autoincrement())
+  nomMatiere         String
+  descriptionMatiere String
+  codeMatiere        String
+  unite_id           Int
+  
+  // Relations
+  emploiDeTemps      EmploiDeTemps[]
+  professeurs        Professeur[]
+  uniteId            UniteEnseignement @relation(fields: [unite_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model UniteEnseignement {
+  id       Int       @id @default(autoincrement())
+  nomUnite String
+  matiere  Matiere[]
+}
