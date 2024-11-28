@@ -8,10 +8,11 @@ import { ProfesseurController } from './professeur/professeur.controller';
 import { ProfesseurService } from './professeur/professeur.service';
 import { ProfesseurModule } from './professeur/professeur.module';
 import { UniteenseignementModule } from './uniteenseignement/uniteenseignement.module';
+import { EdtModule } from './edt/edt.module';
 
 @Global()
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule, ClasseModule, SalleModule, MatiereModule, ProfesseurModule, UniteenseignementModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule, ClasseModule, SalleModule, MatiereModule, ProfesseurModule, UniteenseignementModule, EdtModule],
   controllers: [ProfesseurController],
   providers: [ProfesseurService],
 })
